@@ -8,6 +8,7 @@ describe('Books API', () => {
   let app: INestApplication;
   let httpRequester: supertest.Agent;
 
+
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
       imports: [BookModule],
@@ -19,12 +20,22 @@ describe('Books API', () => {
     httpRequester = request(app.getHttpServer());
   });
 
+
+
+  /**
+   * Test : Get all books
+   */
   it('GET /books', async () => {
     const response = await httpRequester.get('/books').expect(200);
 
     expect(response.body).toEqual(expect.any(Array));
   });
 
+
+
+  /**
+   * Test : Create a book
+   */
   it('POST /books', async () => {
     const response = await httpRequester
       .post('/books')
@@ -44,6 +55,11 @@ describe('Books API', () => {
     });
   });
 
+
+
+  /**
+   * Test : Get a specific book using its isbn
+   */
   it('GET /books/:isbn', async () => {
     // First prepare the data by adding a book
     await httpRequester.post('/books').send({
@@ -66,6 +82,11 @@ describe('Books API', () => {
     });
   });
 
+
+
+  /**
+   * Test : Get a specific book using its author
+   */
   it('GET /books by author', async () => {
     // First prepare the data by adding some books
     await httpRequester.post('/books').send({
@@ -109,7 +130,33 @@ describe('Books API', () => {
     ]);
   });
 
+
+
+  /**
+   * Test : Delete all books
+   */
+  it('DELETE /books/', async () => {
+
+    // Delete all books
+    await httpRequester.delete('/books/').expect(200);
+
+    // Finally, check the book was successfully deleted
+    const response = await httpRequester.get('/books');
+
+    expect(response.body).toEqual([]);
+  });
+
+
+
+  /**
+   * Test : Delete a specific book
+   */
   it('DELETE /books/:isbn', async () => {
+
+    // Delete all books
+    await httpRequester.delete('/books/').expect(200);
+
+
     // First prepare the data by adding a book
     await httpRequester.post('/books').send({
       isbn: '978-2081510436',
@@ -118,11 +165,14 @@ describe('Books API', () => {
       date: '1759',
     });
 
+
     // Delete the book
     await httpRequester.delete('/books/978-2081510436').expect(200);
 
+
     // Finally, check the book was successfully deleted
     const response = await httpRequester.get('/books');
+
 
     expect(response.body).toEqual([]);
   });

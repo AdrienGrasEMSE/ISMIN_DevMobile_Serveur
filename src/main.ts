@@ -1,8 +1,22 @@
-import { NestFactory } from '@nestjs/core';
-import { BookModule } from './book.module';
+import {ValidationPipe} from '@nestjs/common';
+import {NestFactory}    from '@nestjs/core';
+import {BookModule}     from './book.module';
 
+
+
+/**
+ *
+ *
+ */
 async function bootstrap() {
+
+  //
   const app = await NestFactory.create(BookModule);
-  await app.listen(3000);
+  app.useGlobalPipes(new ValidationPipe());
+
+
+  // Listening on the correct port
+  await app.listen(process.env.PORT);
+
 }
 bootstrap();

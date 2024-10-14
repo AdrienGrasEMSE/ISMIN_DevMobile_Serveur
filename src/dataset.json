@@ -1,10 +1,20 @@
-{
-  "compilerOptions": {
-    "target": "es2016",
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true
+[
+  {
+    "isbn": "978-2071234567",
+    "title": "Aurevoir",
+    "author": "AdrienG",
+    "date": "2024"
+  },
+  {
+    "isbn": "978-2089912347",
+    "title": "Bonjour",
+    "author": "AdrienG",
+    "date": "2024"
+  },
+  {
+    "isbn": "978-2081510436",
+    "title": "Candide",
+    "author": "Voltaire",
+    "date": "1756"
   }
-}
+]
