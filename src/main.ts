@@ -15,8 +15,12 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
 
+  // Getting the correct port
+  const port = process.env.PORT;
+
+
   // Listening on the correct port
-  await app.listen(process.env.PORT);
+  await app.listen(port);
 
 }
 bootstrap();
