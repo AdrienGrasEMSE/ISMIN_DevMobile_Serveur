@@ -1,12 +1,9 @@
-import type {Book}                      from './Book';
-import      {BookAPI}                   from "./BookAPI";
-import      {Injectable, OnModuleInit}  from '@nestjs/common';
-import      *                           as fs from "node:fs";
-import      {HttpService}               from "@nestjs/axios";
-import {firstValueFrom, map, Observable} from 'rxjs';
-import {Axios} from "axios";
-import {BookDto} from "./Book.dto";
-
+import type {Book} from './Book';
+import {BookAPI} from "./BookAPI";
+import {Injectable, OnModuleInit} from '@nestjs/common';
+import *                           as fs from "node:fs";
+import {HttpService} from "@nestjs/axios";
+import {firstValueFrom} from 'rxjs';
 
 
 /**
@@ -54,9 +51,7 @@ export class BookService implements OnModuleInit {
 
 
         // Conversion
-        const bookAPIs : BookAPI[] = data;
-        console.log(bookAPIs[0]);
-        const books : Book[] = bookAPIs.map((bookAPI: BookAPI) => ({
+        const books : Book[] = data.map((bookAPI: BookAPI) => ({
             isbn:   bookAPI.isbn,
             title:  bookAPI.title,
             author: bookAPI.authors,

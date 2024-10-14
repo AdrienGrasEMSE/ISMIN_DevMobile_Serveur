@@ -5,22 +5,28 @@ import {BookModule}     from './book.module';
 
 
 /**
+ * Boostrap
  *
- *
+ * @author Gaëtan MAISSE (modified by Adrien GRAS)
  */
-async function bootstrap() {
+async function bootstrap(): Promise<String> {
 
-  //
+  // Creating the app
   const app = await NestFactory.create(BookModule);
   app.useGlobalPipes(new ValidationPipe());
 
 
   // Getting the correct port
   //const port = process.env.PORT;
+  const port = 8080;
 
 
   // Listening on the correct port
-  await app.listen(8080);
+  await app.listen(port);
+
+
+  // Dynamic port updating
+  return app.getHttpServer().address().port;
 
 }
-bootstrap();
+bootstrap().then(port => console.log("Running on port : ", port));
