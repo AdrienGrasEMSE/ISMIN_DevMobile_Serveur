@@ -16,11 +16,11 @@ async function bootstrap() {
 
 
   // Getting the correct port
-  const port = process.env.PORT;
+  //const port = process.env.PORT;
 
 
   // Listening on the correct port
-  await app.listen(port);
+  await app.listen(8080);
 
 }
 bootstrap();
