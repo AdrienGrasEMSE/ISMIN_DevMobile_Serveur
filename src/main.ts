@@ -17,8 +17,7 @@ async function bootstrap(): Promise<String> {
 
 
   // Getting the correct port
-  //const port = process.env.PORT;
-  const port = 8080;
+  const port : string = process.env.PORT || "3000";
 
 
   // Listening on the correct port
