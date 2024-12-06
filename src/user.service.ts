@@ -1,25 +1,26 @@
-import type {Book} from './Book';
-import {BookAPI} from "./BookAPI";
-import {Injectable, OnModuleInit} from '@nestjs/common';
-import *                           as fs from "node:fs";
-import {HttpService} from "@nestjs/axios";
-import {firstValueFrom} from 'rxjs';
+import type {User}                  from './user';
+import {UserAPI}                    from "./userAPI";
+import {Injectable, OnModuleInit}   from '@nestjs/common';
+import {HttpService}                from "@nestjs/axios";
+import {firstValueFrom}             from 'rxjs';
+
+
 
 
 /**
- * BookService : class which handle a storage of books
+ * UserService : class which handle a storage of users
  *
- * @author Gaëtan MAISSE (modified by Adrien GRAS)
+ * @author Adrien GRAS
  */
 @Injectable()
-export class BookService implements OnModuleInit {
+export class UserService implements OnModuleInit {
 
     /** Http service */
     constructor(private readonly httpService: HttpService) {}
 
 
-    /** Book storage */
-    private storage: Map<string, Book> = new Map();
+    /** User storage */
+    private storage: Map<string, User> = new Map();
 
 
     /**
@@ -29,8 +30,8 @@ export class BookService implements OnModuleInit {
      */
     async onModuleInit() {
 
-        // Execute all asynchronous book import
-        await Promise.all([await this.loadBooksFromFile(),await this.loadBooksFromAPI()]);
+        // Execute all asynchronous user import (fetching users from the API)
+        await Promise.all([await this.loadUsersFromAPI()]);
 
     }
 
@@ -38,114 +39,93 @@ export class BookService implements OnModuleInit {
 
 
     /**
-     * Method which load books from the api
+     * Method which load users from the API
      *
      * @author  Adrien GRAS
      */
-    private async loadBooksFromAPI() {
+    private async loadUsersFromAPI() {
 
-        // Getting all books
+        // Getting all users
         const {data} = await firstValueFrom(
-            this.httpService.get<BookAPI[]>('https://api.npoint.io/fbb2a6039fc21e320b30').pipe()
+            this.httpService.get<{ results: UserAPI[] }>('https://randomuser.me/api/?results=5000').pipe()
         )
 
 
         // Conversion
-        const books : Book[] = data.map((bookAPI: BookAPI) => ({
-            isbn:   bookAPI.isbn,
-            title:  bookAPI.title,
-            author: bookAPI.authors,
-            date:   bookAPI.publication_date,
+        const users : User[] = data.results.map((userAPI: UserAPI) => ({
+            gender:     userAPI.gender,
+            name:       userAPI.name,
+            location:   userAPI.location,
+            email:      userAPI.email,
+            login:      userAPI.login,
+            dob:        userAPI.dob,
+            registered: userAPI.registered,
+            phone:      userAPI.phone,
+            cell:       userAPI.cell,
+            id:         userAPI.id,
+            picture:    userAPI.picture,
+            nat:        userAPI.nat,
         }));
 
 
-        // Adding all books
-        for (const book of books) {
-            this.addBook(book);
+        // Adding all users
+        for (const user of users) {
+            this.addUser(user);
         }
 
     }
-    
+
 
 
 
     /**
-     * Method which load dataset's books
+     * Add a user to the storage
+     *
+     * @author  Adrien GRAS
+     * @param   user
+     */
+    addUser(user: User) {
+        this.storage.set(user.login.uuid, user);
+    }
+
+
+
+
+    /**
+     * Getting a user using its uuid
+     *
+     * @author  Adrien GRAS
+     * @param   uuid
+     */
+    getUser(uuid: string): User {
+
+        // Getting the user
+        const user = this.storage.get(uuid);
+
+
+        // If the user exist (this if condition check if it is defined)
+        if (!user) {
+            throw new Error(`User with UUID ${uuid} not found`);
+        }
+
+
+        // Returning the user
+        return user;
+    }
+
+
+
+
+    /**
+     * Getting all users (ordered by the last name)
      *
      * @author  Adrien GRAS
      */
-    private async loadBooksFromFile() {
-
-        // Trying reading data
-        try {
-            // Reading data
-            const data          = await fs.promises.readFile('./src/dataset.json', 'utf8');
-            const booksList: Book[]     = JSON.parse(data);
-
-
-            // Adding all books
-            for (const book of booksList) {
-                this.addBook(book);
-            }
-
-
-        // Handling errors
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-
-
-
-    /**
-     * Add a book to the storage
-     *
-     * @author  Gaëtan MAISSE
-     * @param   book
-     */
-    addBook(book: Book) {
-        this.storage.set(book.isbn, book);
-    }
-
-
-
-
-    /**
-     * Getting a book using its isbn
-     *
-     * @author  Gaëtan MAISSE
-     * @param   isbn
-     */
-    getBook(isbn: string): Book {
-
-        // Getting the book
-        const book = this.storage.get(isbn);
-
-
-        // If the book exist (this if condition check if it is defined)
-        if (!book) {
-            throw new Error(`Book with ISBN ${isbn} not found`);
-        }
-
-
-        // Returning the book
-        return book;
-    }
-
-
-
-
-    /**
-     * Getting all books
-     *
-     * @author  Gaëtan MAISSE
-     */
-    getAllBooks(): Book[] {
+    getAllUsers(): User[] {
 
         // Sorting the storage
         return Array.from(this.storage.values()).sort((a, b) =>
-            a.title.localeCompare(b.title),
+            a.name.last.localeCompare(b.name.last),
         );
 
     }
@@ -154,28 +134,11 @@ export class BookService implements OnModuleInit {
 
 
     /**
-     * Getting a book using its author
+     * Getting the number of users stored
      *
-     * @author  Gaëtan MAISSE
-     * @param   author
+     * @author  Adrien GRAS
      */
-    getBooksOf(author: string): Book[] {
-
-        // Filtering the storage
-        return this.getAllBooks()
-            .filter ((book) => book.author === author)
-            .sort   ((a, b) => a.title.localeCompare(b.title));
-    }
-
-
-
-
-    /**
-     * Getting the number of book stored
-     *
-     * @author  Gaëtan MAISSE
-     */
-    getTotalNumberOfBooks(): number {
+    getNumberOfUsers(): number {
         return this.storage.size;
     }
 
@@ -183,22 +146,22 @@ export class BookService implements OnModuleInit {
 
 
     /**
-     * Remove a book using its isbn
+     * Remove a user using its uuid
      *
-     * @author  Gaëtan MAISSE
-     * @param   isbn
+     * @author  Adrien GRAS
+     * @param   uuid
      */
-    remove(isbn: string) {
-        this.storage.delete(isbn);
+    remove(uuid: string) {
+        this.storage.delete(uuid);
     }
 
 
 
 
     /**
-     * Remove all books stored
+     * Remove all users stored
      *
-     * @author  Gaëtan MAISSE
+     * @author  Adrien GRAS
      */
     removeAll() {
         this.storage.clear();
@@ -208,17 +171,17 @@ export class BookService implements OnModuleInit {
 
 
     /**
-     * Search a book using a string term
+     * Search a user using a string term
      *
-     * @author  Gaëtan MAISSE
+     * @author  Adrien GRAS
      * @param   term
      *
-     * Term : it can contain the title and the author of the book.
+     * Term : it can contain the first and last name of the user.
      */
     search(term: string) {
         return Array.from(this.storage.values())
-            .filter((book) => book.title.includes(term) || book.author.includes(term))
-            .sort((a, b) => a.title.localeCompare(b.title));
+            .filter((user) => user.name.first.includes(term) || user.name.last.includes(term))
+            .sort((a, b) => a.name.last.localeCompare(b.name.last));
     }
 
 }

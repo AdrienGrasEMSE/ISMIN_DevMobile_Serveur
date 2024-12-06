@@ -2,16 +2,16 @@ import type { INestApplication } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import type supertest from 'supertest';
-import { BookModule } from '../src/book.module';
+import {UserModule} from "../src/user.module";
 
-describe('Books API', () => {
+describe('Users API', () => {
   let app: INestApplication;
   let httpRequester: supertest.Agent;
 
 
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
-      imports: [BookModule],
+      imports: [UserModule],
     }).compile();
 
     app = moduleRef.createNestApplication();
@@ -22,156 +22,339 @@ describe('Books API', () => {
 
 
 
+
   /**
-   * Test : Get all books
+   * Test : Get all users
    */
-  it('GET /books', async () => {
-    const response = await httpRequester.get('/books').expect(200);
+  it('GET /users', async () => {
+    const response = await httpRequester.get('/users').expect(200);
 
     expect(response.body).toEqual(expect.any(Array));
   });
 
 
 
+
   /**
-   * Test : Create a book
+   * Test : Create a user
    */
-  it('POST /books', async () => {
+  it('POST /users', async () => {
     const response = await httpRequester
-      .post('/books')
+      .post('/users')
       .send({
-        isbn: '978-2081510436',
-        title: 'Candide',
-        author: 'Voltaire',
-        date: '1759',
+        gender:         'male',
+        name:           {
+                          title:          'Lord',
+                          first:          'Pablo',
+                          last:           'Escoubar',
+        },
+        location:       {
+                          street:         {
+                                          number:         '879',
+                                          name:           'Route de Mimet',
+                          },
+                          city:           'Gardanne',
+                          state:          'Bouches-du-Rhône',
+                          country:        'FRANCE',
+                          postcode:       '13120',
+                          coordinates:    {
+                                          latitude:       '43.450001',
+                                          longitude:      '5.46667',
+                          },
+                          timezone:       {
+                                          offset:         '+1:00',
+                                          description:    'Central European Time',
+                          },
+        },
+        email:          'oskur@mail.com',
+        login:          {
+                          uuid:           'de351d17-937a-4b3e-8ab8-7fbe0db5ce7e',
+                          username:       'PabloCoubar',
+        },
+        dob:            {
+                          date:           '2001-01-01T01:43:58.309Z',
+                          age:            '23',
+        },
+        registered:     {
+                          date:           '2021-01-01T01:43:58.309Z',
+                          age:            '23',
+        },
+        phone:          '0412345678',
+        cell:           '0612345678',
+        id:             {
+                          name:           'INSEE',
+                          value:          '1970874716690 91',
+        },
+        picture:        {
+                          large:          'https://randomuser.me/api/portraits/men/3.jpg',
+                          medium:         'https://randomuser.me/api/portraits/med/men/3.jpg',
+                          thumbnail:      'https://randomuser.me/api/portraits/thumb/men/3.jpg',
+        },
+        nat:            'FR',
       })
       .expect(201);
 
     expect(response.body).toEqual({
-      isbn: '978-2081510436',
-      title: 'Candide',
-      author: 'Voltaire',
-      date: '1759',
+      gender:         'male',
+      name:           {
+        title:          'Lord',
+        first:          'Pablo',
+        last:           'Escoubar',
+      },
+      location:       {
+        street:         {
+          number:         '879',
+          name:           'Route de Mimet',
+        },
+        city:           'Gardanne',
+        state:          'Bouches-du-Rhône',
+        country:        'FRANCE',
+        postcode:       '13120',
+        coordinates:    {
+          latitude:       '43.450001',
+          longitude:      '5.46667',
+        },
+        timezone:       {
+          offset:         '+1:00',
+          description:    'Central European Time',
+        },
+      },
+      email:          'oskur@mail.com',
+      login:          {
+        uuid:           'de351d17-937a-4b3e-8ab8-7fbe0db5ce7e',
+        username:       'PabloCoubar',
+      },
+      dob:            {
+        date:           '2001-01-01T01:43:58.309Z',
+        age:            '23',
+      },
+      registered:     {
+        date:           '2021-01-01T01:43:58.309Z',
+        age:            '23',
+      },
+      phone:          '0412345678',
+      cell:           '0612345678',
+      id:             {
+        name:           'INSEE',
+        value:          '1970874716690 91',
+      },
+      picture:        {
+        large:          'https://randomuser.me/api/portraits/men/3.jpg',
+        medium:         'https://randomuser.me/api/portraits/med/men/3.jpg',
+        thumbnail:      'https://randomuser.me/api/portraits/thumb/men/3.jpg',
+      },
+      nat:            'FR',
     });
   });
 
 
 
+
   /**
-   * Test : Get a specific book using its isbn
+   * Test : Get a specific user using its uuid
    */
-  it('GET /books/:isbn', async () => {
-    // First prepare the data by adding a book
-    await httpRequester.post('/books').send({
-      isbn: '978-2081510436',
-      title: 'Candide',
-      author: 'Voltaire',
-      date: '1759',
+  it('GET /users/:uuid', async () => {
+
+    // First prepare the data by adding a user
+    await httpRequester.post('/users').send({
+      gender:         'male',
+      name:           {
+        title:          'Lord',
+        first:          'Pablo',
+        last:           'Escoubar',
+      },
+      location:       {
+        street:         {
+          number:         '879',
+          name:           'Route de Mimet',
+        },
+        city:           'Gardanne',
+        state:          'Bouches-du-Rhône',
+        country:        'FRANCE',
+        postcode:       '13120',
+        coordinates:    {
+          latitude:       '43.450001',
+          longitude:      '5.46667',
+        },
+        timezone:       {
+          offset:         '+1:00',
+          description:    'Central European Time',
+        },
+      },
+      email:          'oskur@mail.com',
+      login:          {
+        uuid:           'de351d17-937a-4b3e-8ab8-7fbe0db5ce7e',
+        username:       'PabloCoubar',
+      },
+      dob:            {
+        date:           '2001-01-01T01:43:58.309Z',
+        age:            '23',
+      },
+      registered:     {
+        date:           '2021-01-01T01:43:58.309Z',
+        age:            '23',
+      },
+      phone:          '0412345678',
+      cell:           '0612345678',
+      id:             {
+        name:           'INSEE',
+        value:          '1970874716690 91',
+      },
+      picture:        {
+        large:          'https://randomuser.me/api/portraits/men/3.jpg',
+        medium:         'https://randomuser.me/api/portraits/med/men/3.jpg',
+        thumbnail:      'https://randomuser.me/api/portraits/thumb/men/3.jpg',
+      },
+      nat:            'FR',
     });
 
     // Then get the previously stored book
     const response = await httpRequester
-      .get('/books/978-2081510436')
+      .get('/users/de351d17-937a-4b3e-8ab8-7fbe0db5ce7e')
       .expect(200);
 
     expect(response.body).toEqual({
-      isbn: '978-2081510436',
-      title: 'Candide',
-      author: 'Voltaire',
-      date: '1759',
+      gender:         'male',
+      name:           {
+        title:          'Lord',
+        first:          'Pablo',
+        last:           'Escoubar',
+      },
+      location:       {
+        street:         {
+          number:         '879',
+          name:           'Route de Mimet',
+        },
+        city:           'Gardanne',
+        state:          'Bouches-du-Rhône',
+        country:        'FRANCE',
+        postcode:       '13120',
+        coordinates:    {
+          latitude:       '43.450001',
+          longitude:      '5.46667',
+        },
+        timezone:       {
+          offset:         '+1:00',
+          description:    'Central European Time',
+        },
+      },
+      email:          'oskur@mail.com',
+      login:          {
+        uuid:           'de351d17-937a-4b3e-8ab8-7fbe0db5ce7e',
+        username:       'PabloCoubar',
+      },
+      dob:            {
+        date:           '2001-01-01T01:43:58.309Z',
+        age:            '23',
+      },
+      registered:     {
+        date:           '2021-01-01T01:43:58.309Z',
+        age:            '23',
+      },
+      phone:          '0412345678',
+      cell:           '0612345678',
+      id:             {
+        name:           'INSEE',
+        value:          '1970874716690 91',
+      },
+      picture:        {
+        large:          'https://randomuser.me/api/portraits/men/3.jpg',
+        medium:         'https://randomuser.me/api/portraits/med/men/3.jpg',
+        thumbnail:      'https://randomuser.me/api/portraits/thumb/men/3.jpg',
+      },
+      nat:            'FR',
     });
   });
 
 
 
-  /**
-   * Test : Get a specific book using its author
-   */
-  it('GET /books by author', async () => {
-    // First prepare the data by adding some books
-    await httpRequester.post('/books').send({
-      isbn: '978-2081510436',
-      title: 'Candide',
-      author: 'Voltaire',
-      date: '1759',
-    });
-    await httpRequester.post('/books').send({
-      isbn: '978-2081510438',
-      title: 'Zadig',
-      author: 'Voltaire',
-      date: '1748',
-    });
-    await httpRequester.post('/books').send({
-      isbn: '978-2081510437',
-      title: 'La Cantatrice chauve',
-      author: 'Ionesco',
-      date: '1950',
-    });
-
-    // Then get the previously stored book
-    const response = await httpRequester
-      .get('/books')
-      .query({ author: 'Voltaire' })
-      .expect(200);
-
-    expect(response.body).toEqual([
-      {
-        isbn: '978-2081510436',
-        title: 'Candide',
-        author: 'Voltaire',
-        date: '1759',
-      },
-      {
-        isbn: '978-2081510438',
-        title: 'Zadig',
-        author: 'Voltaire',
-        date: '1748',
-      },
-    ]);
-  });
-
-
 
   /**
-   * Test : Delete all books
+   * Test : Delete all users
    */
-  it('DELETE /books/', async () => {
+  it('DELETE /users/', async () => {
 
-    // Delete all books
-    await httpRequester.delete('/books/').expect(200);
+    // Delete all users
+    await httpRequester.delete('/users/').expect(200);
 
-    // Finally, check the book was successfully deleted
-    const response = await httpRequester.get('/books');
+    // Finally, check users was successfully deleted
+    const response = await httpRequester.get('/users');
 
     expect(response.body).toEqual([]);
   });
 
 
 
+
   /**
-   * Test : Delete a specific book
+   * Test : Delete a specific user
    */
-  it('DELETE /books/:isbn', async () => {
+  it('DELETE /users/:uuid', async () => {
 
-    // Delete all books
-    await httpRequester.delete('/books/').expect(200);
+    // Delete all users
+    await httpRequester.delete('/users/').expect(200);
 
 
-    // First prepare the data by adding a book
-    await httpRequester.post('/books').send({
-      isbn: '978-2081510436',
-      title: 'Candide',
-      author: 'Voltaire',
-      date: '1759',
+    // First prepare the data by adding a user
+    await httpRequester.post('/users').send({
+      gender:         'male',
+      name:           {
+        title:          'Lord',
+        first:          'Pablo',
+        last:           'Escoubar',
+      },
+      location:       {
+        street:         {
+          number:         '879',
+          name:           'Route de Mimet',
+        },
+        city:           'Gardanne',
+        state:          'Bouches-du-Rhône',
+        country:        'FRANCE',
+        postcode:       '13120',
+        coordinates:    {
+          latitude:       '43.450001',
+          longitude:      '5.46667',
+        },
+        timezone:       {
+          offset:         '+1:00',
+          description:    'Central European Time',
+        },
+      },
+      email:          'oskur@mail.com',
+      login:          {
+        uuid:           'de351d17-937a-4b3e-8ab8-7fbe0db5ce7e',
+        username:       'PabloCoubar',
+      },
+      dob:            {
+        date:           '2001-01-01T01:43:58.309Z',
+        age:            '23',
+      },
+      registered:     {
+        date:           '2021-01-01T01:43:58.309Z',
+        age:            '23',
+      },
+      phone:          '0412345678',
+      cell:           '0612345678',
+      id:             {
+        name:           'INSEE',
+        value:          '1970874716690 91',
+      },
+      picture:        {
+        large:          'https://randomuser.me/api/portraits/men/3.jpg',
+        medium:         'https://randomuser.me/api/portraits/med/men/3.jpg',
+        thumbnail:      'https://randomuser.me/api/portraits/thumb/men/3.jpg',
+      },
+      nat:            'FR',
     });
 
 
-    // Delete the book
-    await httpRequester.delete('/books/978-2081510436').expect(200);
+    // Delete the user
+    await httpRequester.delete('/users/de351d17-937a-4b3e-8ab8-7fbe0db5ce7e').expect(200);
 
 
-    // Finally, check the book was successfully deleted
-    const response = await httpRequester.get('/books');
+    // Finally, check the user was successfully deleted
+    const response = await httpRequester.get('/users');
 
 
     expect(response.body).toEqual([]);

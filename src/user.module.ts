@@ -1,17 +1,17 @@
 import {Module}         from '@nestjs/common';
-import {BookController} from './book.controller';
-import {BookService}    from './book.service';
 import {HttpModule}     from "@nestjs/axios";
+import {UserController} from "./user.controller";
+import {UserService}    from "./user.service";
 
 
 /**
- * BookModule
+ * UserModule
  *
- * @author Gaëtan MAISSE (modified by Adrien GRAS)
+ * @author Adrien GRAS
  */
 @Module({
-  imports: [HttpModule],
-  controllers: [BookController],
-  providers: [BookService],
+  imports:      [HttpModule],
+  controllers:  [UserController],
+  providers:    [UserService],
 })
-export class BookModule {}
+export class UserModule {}

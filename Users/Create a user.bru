@@ -1,0 +1,66 @@
+meta {
+  name: Create a user
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://localhost:57859/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "gender": "male",
+    "name": {
+      "title": "Lord",
+      "first": "Pablo",
+      "last": "Escoubar"
+    },
+    "location": {
+      "street": {
+        "number": "879",
+        "name": "Route de Mimet"
+      },
+      "city": "Gardanne",
+      "state": "Bouches-du-Rhône",
+      "country": "FRANCE",
+      "postcode": "13120",
+      "coordinates": {
+        "latitude": "43.450001",
+        "longitude": "5.46667"
+      },
+      "timezone": {
+        "offset": "+1:00",
+        "description": "Central European Time"
+      }
+    },
+    "email": "oskur@mail.com",
+    "login": {
+      "uuid": "de351d17-937a-4b3e-8ab8-7fbe0db5ce7e",
+      "username": "PabloCoubar"
+    },
+    "dob": {
+      "date": "2001-01-01T01:43:58.309Z",
+      "age": "23"
+    },
+    "registered": {
+      "date": "2021-01-01T01:43:58.309Z",
+      "age": "23"
+    },
+    "phone": "0412345678",
+    "cell": "0612345678",
+    "id": {
+      "name": "INSEE",
+      "value": "1970874716690 91"
+    },
+    "picture": {
+      "large": "https://randomuser.me/api/portraits/men/3.jpg",
+      "medium": "https://randomuser.me/api/portraits/med/men/3.jpg",
+      "thumbnail": "https://randomuser.me/api/portraits/thumb/men/3.jpg"
+    },
+    "nat": "FR"
+  }
+  
+}

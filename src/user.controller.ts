@@ -8,56 +8,104 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import type { Book } from './Book';
-import { BookDto } from './Book.dto';
-import { BookService } from './book.service';
-
-@Controller('/books')
-export class BookController {
-  constructor(private readonly bookService: BookService) {}
-
-  @Post()
-  createBook(@Body() bookDto: BookDto): Book {
-    this.bookService.addBook({
-      isbn:   bookDto.isbn,
-      author: bookDto.author,
-      title:  bookDto.title,
-      date:   bookDto.date,
-    });
-    return this.bookService.getBook(bookDto.isbn);
-  }
+import {UserService}  from "./user.service";
+import {UserDto} from "./user.dto";
+import {User} from "./user";
 
 
+
+
+/**
+ * UserController : class which creat and handle user endpoint on the server
+ *
+ * @author Adrien GRAS
+ */
+@Controller('/users')
+export class UserController {
+  constructor(private readonly userService: UserService) {}
+
+
+  /**
+   * Getting all users
+   *
+   * @author Adrien GRAS
+   */
   @Get()
-  getBooks(@Query('author') author: string): Book[] {
-    if (author) {
-      return this.bookService.getBooksOf(author);
-    }
-    return this.bookService.getAllBooks();
+  getAllUsers(): User[] {
+    return this.userService.getAllUsers();
   }
 
 
+  /**
+   * Getting a user using its uuid
+   *
+   * @author Adrien GRAS
+   * @param uuid
+   */
+  @Get(':uuid')
+  getUser(@Param('uuid') uuid: string): User {
+    return this.userService.getUser(uuid);
+  }
+
+
+  /**
+   * User creation
+   *
+   * @author Adrien GRAS
+   * @param userDto
+   */
+  @Post()
+  createUser(@Body() userDto: UserDto): User {
+    this.userService.addUser({
+      gender:         userDto.gender,
+      name:           userDto.name,
+      location:       userDto.location,
+      email:          userDto.email,
+      login:          userDto.login,
+      dob:            userDto.dob,
+      registered:     userDto.registered,
+      phone:          userDto.phone,
+      cell:           userDto.cell,
+      id:             userDto.id,
+      picture:        userDto.picture,
+      nat:            userDto.nat,
+    });
+    return this.userService.getUser(userDto.login.uuid);
+  }
+
+
+  /**
+   * User deletion
+   *
+   * @author Adrien GRAS
+   * @param uuid
+   */
+  @Delete(':uuid')
+  deleteUser(@Param('uuid') uuid: string): void {
+    this.userService.remove(uuid);
+  }
+
+
+  /**
+   * Clearing the server storage
+   *
+   * @author Adrien GRAS
+   */
   @Delete()
-  deleteAllBook(): void {
-    this.bookService.removeAll();
+  deleteAllUser(): void {
+    this.userService.removeAll();
   }
 
 
-  @Get(':isbn')
-  getBook(@Param('isbn') isbn: string): Book {
-    return this.bookService.getBook(isbn);
-  }
-
-
-  @Delete(':isbn')
-  deleteBook(@Param('isbn') isbn: string): void {
-    this.bookService.remove(isbn);
-  }
-
-
+  /**
+   * Searching a user
+   *
+   * @author Adrien GRAS
+   * @param term
+   */
   @Post('search')
   @HttpCode(200)
-  searchBooks(@Body() { term }: { term: string }): Book[] {
-    return this.bookService.search(term);
+  searchBooks(@Body() { term }: { term: string }): User[] {
+    return this.userService.search(term);
   }
 }

@@ -1,6 +1,6 @@
 import {ValidationPipe} from '@nestjs/common';
 import {NestFactory}    from '@nestjs/core';
-import {BookModule}     from './book.module';
+import {UserModule} from "./user.module";
 
 
 
@@ -12,7 +12,7 @@ import {BookModule}     from './book.module';
 async function bootstrap(): Promise<String> {
 
   // Creating the app
-  const app = await NestFactory.create(BookModule);
+  const app = await NestFactory.create(UserModule);
   app.useGlobalPipes(new ValidationPipe());
 
 
