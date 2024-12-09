@@ -36,6 +36,18 @@ describe('Users API', () => {
 
 
   /**
+   * Test : Get a user page
+   */
+  it('GET /users/page/1', async () => {
+    const response = await httpRequester.get('/users/page/1').expect(200);
+
+    expect(response.body).toEqual(expect.any(Array));
+  });
+
+
+
+
+  /**
    * Test : Create a user
    */
   it('POST /users', async () => {

@@ -3,7 +3,7 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
+  HttpCode, NotFoundException,
   Param,
   Post,
   Query,
@@ -37,6 +37,22 @@ export class UserController {
 
 
   /**
+   * Getting a page of 20 users
+   *
+   * @author Adrien GRAS
+   */
+  @Get('Page/:num_page')
+  getAllUsersPage(@Param('num_page') num_page: number): User[] {
+    try {
+      return this.userService.getAllUsersPage(num_page);
+    }
+    catch (error) {
+      throw new NotFoundException(error.message);
+    }
+  }
+
+
+  /**
    * Getting a user using its uuid
    *
    * @author Adrien GRAS
@@ -44,7 +60,12 @@ export class UserController {
    */
   @Get(':uuid')
   getUser(@Param('uuid') uuid: string): User {
-    return this.userService.getUser(uuid);
+    try {
+      return this.userService.getUser(uuid);
+    }
+    catch (error) {
+      throw new NotFoundException(error.message);
+    }
   }
 
 

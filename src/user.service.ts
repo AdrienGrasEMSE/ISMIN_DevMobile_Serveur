@@ -23,6 +23,8 @@ export class UserService implements OnModuleInit {
     private storage: Map<string, User> = new Map();
 
 
+
+
     /**
      * Method which run on server start
      *
@@ -105,7 +107,7 @@ export class UserService implements OnModuleInit {
 
         // If the user exist (this if condition check if it is defined)
         if (!user) {
-            throw new Error(`User with UUID ${uuid} not found`);
+            throw new Error(`User with UUID '${uuid}' not found`);
         }
 
 
@@ -127,6 +129,43 @@ export class UserService implements OnModuleInit {
         return Array.from(this.storage.values()).sort((a, b) =>
             a.name.last.localeCompare(b.name.last),
         );
+
+    }
+
+
+
+
+    /**
+     * Getting 20 users (ordered by the last name), using
+     * a pagination system
+     *
+     * @author  Adrien GRAS
+     */
+    getAllUsersPage(num_page: number): User[] {
+
+        // Number of user per page
+        const usersPerPage = 20;
+
+
+        // Index calculation
+        const startIndex    = (num_page - 1) * usersPerPage;
+        const endIndex      = startIndex + usersPerPage;
+
+
+        // Bad index management
+        if (num_page < 1 || startIndex > this.storage.size) {
+            throw new Error(`Page ${num_page} does not exist`);
+        }
+
+
+        // Sorting the storage
+        const sortedUsers = Array.from(this.storage.values()).sort((a, b) =>
+            a.name.last.localeCompare(b.name.last),
+        );
+
+
+        // Return users
+        return sortedUsers.slice(startIndex, endIndex);
 
     }
 
