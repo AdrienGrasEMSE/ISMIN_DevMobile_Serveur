@@ -5,13 +5,14 @@ meta {
 }
 
 post {
-  url: http://localhost:57859/users
+  url: {{protocol}}://{{adress}}/Users
   body: json
   auth: none
 }
 
 body:json {
   {
+    "isFavourite" : false,
     "gender": "male",
     "name": {
       "title": "Lord",

@@ -1,11 +1,17 @@
 meta {
-  name: Get a specific user
+  name: Update user
   type: http
-  seq: 3
+  seq: 6
 }
 
-get {
+patch {
   url: {{protocol}}://{{adress}}/Users/de351d17-937a-4b3e-8ab8-7fbe0db5ce7e
-  body: none
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "isFavourite" : false
+  }
 }

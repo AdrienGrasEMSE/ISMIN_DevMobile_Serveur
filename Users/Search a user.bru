@@ -1,0 +1,20 @@
+meta {
+  name: Search a user
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{protocol}}://{{adress}}/Users/Search
+  body: json
+  auth: none
+}
+
+body:json {
+  {"term" : "Escoubar"}
+  
+}
+
+body:text {
+  "Pablo"
+}

@@ -1,11 +1,11 @@
 meta {
   name: Delete all users
   type: http
-  seq: 6
+  seq: 8
 }
 
 delete {
-  url: http://localhost:57859/users
+  url: {{protocol}}://{{adress}}/Users
   body: none
   auth: none
 }

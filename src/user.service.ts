@@ -1,6 +1,6 @@
 import type {User}                  from './user';
 import {UserAPI}                    from "./userAPI";
-import {Injectable, OnModuleInit}   from '@nestjs/common';
+import {Injectable, NotFoundException, OnModuleInit} from '@nestjs/common';
 import {HttpService}                from "@nestjs/axios";
 import {firstValueFrom}             from 'rxjs';
 
@@ -55,6 +55,7 @@ export class UserService implements OnModuleInit {
 
         // Conversion
         const users : User[] = data.results.map((userAPI: UserAPI) => ({
+            isFavourite:false,
             gender:     userAPI.gender,
             name:       userAPI.name,
             location:   userAPI.location,
@@ -173,9 +174,40 @@ export class UserService implements OnModuleInit {
 
 
     /**
+     * Update isFavourite for a specific User
+     *
+     * @author Adrien GRAS
+     * @param uuid
+     */
+    patchUser(uuid: string, isFavourite: boolean) : User {
+
+        // Getting the user
+        const user = this.storage.get(uuid);
+
+
+        // If the user exist (this if condition check if it is defined)
+        if (!user) {
+            throw new Error(`User with UUID '${uuid}' not found`);
+        }
+
+
+        // Updating the user
+        user.isFavourite = isFavourite;
+
+
+        // Returning the user (to confirm transaction)
+        return user;
+
+    }
+
+
+
+
+    /**
      * Getting the number of users stored
      *
      * @author  Adrien GRAS
+     * @unusued
      */
     getNumberOfUsers(): number {
         return this.storage.size;

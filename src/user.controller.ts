@@ -4,7 +4,7 @@ import {
   Delete,
   Get,
   HttpCode, NotFoundException,
-  Param,
+  Param, Patch,
   Post,
   Query,
 } from '@nestjs/common';
@@ -20,7 +20,7 @@ import {User} from "./user";
  *
  * @author Adrien GRAS
  */
-@Controller('/users')
+@Controller('/Users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -78,6 +78,7 @@ export class UserController {
   @Post()
   createUser(@Body() userDto: UserDto): User {
     this.userService.addUser({
+      isFavourite:    userDto.isFavourite,
       gender:         userDto.gender,
       name:           userDto.name,
       location:       userDto.location,
@@ -92,6 +93,24 @@ export class UserController {
       nat:            userDto.nat,
     });
     return this.userService.getUser(userDto.login.uuid);
+  }
+
+
+  /**
+   * User update
+   *
+   * @author Adrien GRAS
+   * @param uuid
+   * @param isFavourite
+   */
+  @Patch(':uuid')
+  patchUser(@Param('uuid') uuid: string, @Body() { isFavourite }: { isFavourite: boolean }): User {
+    try {
+      return this.userService.patchUser(uuid, isFavourite);
+    }
+    catch (error) {
+      throw new NotFoundException(error.message);
+    }
   }
 
 
@@ -124,7 +143,7 @@ export class UserController {
    * @author Adrien GRAS
    * @param term
    */
-  @Post('search')
+  @Post('Search')
   @HttpCode(200)
   searchBooks(@Body() { term }: { term: string }): User[] {
     return this.userService.search(term);

@@ -1,4 +1,4 @@
-import {IsString, IsObject, IsNotEmpty, IsEmail} from "class-validator";
+import {IsString, IsObject, IsNotEmpty, IsEmail, IsBoolean, IsBooleanString} from "class-validator";
 
 
 
@@ -166,6 +166,10 @@ export class LocationDto {
  * @author Adrien GRAS
  */
 export class UserDto {
+    @IsBoolean()
+    isFavourite: boolean;
+
+
     @IsString()
     @IsNotEmpty()
     gender: string;
