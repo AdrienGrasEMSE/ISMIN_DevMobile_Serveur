@@ -1,6 +1,6 @@
 import type {User}                  from './user';
 import {UserAPI}                    from "./userAPI";
-import {Injectable, NotFoundException, OnModuleInit} from '@nestjs/common';
+import {Injectable, OnModuleInit}   from '@nestjs/common';
 import {HttpService}                from "@nestjs/axios";
 import {firstValueFrom}             from 'rxjs';
 
@@ -196,6 +196,7 @@ export class UserService implements OnModuleInit {
      *
      * @author Adrien GRAS
      * @param uuid
+     * @param isFavorite
      */
     patchUser(uuid: string, isFavorite: boolean) : User {
 
@@ -216,19 +217,6 @@ export class UserService implements OnModuleInit {
         // Returning the user (to confirm transaction)
         return user;
 
-    }
-
-
-
-
-    /**
-     * Getting the number of users stored
-     *
-     * @author  Adrien GRAS
-     * @unusued
-     */
-    getNumberOfUsers(): number {
-        return this.storage.size;
     }
 
 
