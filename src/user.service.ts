@@ -55,7 +55,7 @@ export class UserService implements OnModuleInit {
 
         // Conversion
         const users : User[] = data.results.map((userAPI: UserAPI) => ({
-            isFavourite:false,
+            isFavorite:false,
             gender:     userAPI.gender,
             name:       userAPI.name,
             location:   userAPI.location,
@@ -174,12 +174,30 @@ export class UserService implements OnModuleInit {
 
 
     /**
-     * Update isFavourite for a specific User
+     * Getting all Favorite
+     *
+     * @author  Adrien GRAS
+     */
+    getUsersFavorite(): User[] {
+
+        // Sorting the storage, getting only favorite Users
+        return Array.from(this.storage.values())
+            .filter(user => user.isFavorite === true)
+            .sort((a, b) => a.name.last.localeCompare(b.name.last),
+        );
+
+    }
+
+
+
+
+    /**
+     * Update isFavorite for a specific User
      *
      * @author Adrien GRAS
      * @param uuid
      */
-    patchUser(uuid: string, isFavourite: boolean) : User {
+    patchUser(uuid: string, isFavorite: boolean) : User {
 
         // Getting the user
         const user = this.storage.get(uuid);
@@ -192,7 +210,7 @@ export class UserService implements OnModuleInit {
 
 
         // Updating the user
-        user.isFavourite = isFavourite;
+        user.isFavorite = isFavorite;
 
 
         // Returning the user (to confirm transaction)

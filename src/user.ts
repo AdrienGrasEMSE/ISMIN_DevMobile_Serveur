@@ -83,7 +83,7 @@ interface Location {
  * @author Adrien GRAS
  */
 export interface User {
-    isFavourite:    boolean;
+    isFavorite:    boolean;
     gender:         string;
     name:           Name;
     location:       Location;

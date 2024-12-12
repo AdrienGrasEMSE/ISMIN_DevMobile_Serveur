@@ -11,6 +11,8 @@ import {
 import {UserService}  from "./user.service";
 import {UserDto} from "./user.dto";
 import {User} from "./user";
+import {PatchUserDto} from "./user.patchuser.dto";
+import {SearchUserDto} from "./user.searchuser.dto";
 
 
 
@@ -53,6 +55,17 @@ export class UserController {
 
 
   /**
+   * Getting all favorite Users
+   *
+   * @author Adrien GRAS
+   */
+  @Get('Favorite')
+  getUsersFavorite(): User[] {
+    return this.userService.getUsersFavorite();
+  }
+
+
+  /**
    * Getting a user using its uuid
    *
    * @author Adrien GRAS
@@ -78,7 +91,7 @@ export class UserController {
   @Post()
   createUser(@Body() userDto: UserDto): User {
     this.userService.addUser({
-      isFavourite:    userDto.isFavourite,
+      isFavorite:    userDto.isFavorite,
       gender:         userDto.gender,
       name:           userDto.name,
       location:       userDto.location,
@@ -101,12 +114,12 @@ export class UserController {
    *
    * @author Adrien GRAS
    * @param uuid
-   * @param isFavourite
+   * @param body
    */
   @Patch(':uuid')
-  patchUser(@Param('uuid') uuid: string, @Body() { isFavourite }: { isFavourite: boolean }): User {
+  patchUser(@Param('uuid') uuid: string, @Body() body: PatchUserDto): User {
     try {
-      return this.userService.patchUser(uuid, isFavourite);
+      return this.userService.patchUser(uuid, body.isFavorite);
     }
     catch (error) {
       throw new NotFoundException(error.message);
@@ -141,11 +154,10 @@ export class UserController {
    * Searching a user
    *
    * @author Adrien GRAS
-   * @param term
+   * @param body
    */
   @Post('Search')
-  @HttpCode(200)
-  searchBooks(@Body() { term }: { term: string }): User[] {
-    return this.userService.search(term);
+  searchBooks(@Body() body: SearchUserDto): User[] {
+    return this.userService.search(body.term);
   }
 }

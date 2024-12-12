@@ -167,7 +167,7 @@ export class LocationDto {
  */
 export class UserDto {
     @IsBoolean()
-    isFavourite: boolean;
+    isFavorite: boolean;
 
 
     @IsString()
