@@ -3,7 +3,7 @@
 This project is basically a school project (from the École des Mines de Saint Étienne), in which we had to develop a mobile application with a REST-type architecture. This TypeScript project is the web server.
 
 > The mobile part is in this repo :
-> 
+> https://github.com/AdrienGrasEMSE/ISMIN_DevMobile
 
 
 
